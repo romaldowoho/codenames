@@ -2,26 +2,25 @@
 <template>
   <div id="card">
     <div id="card-inner">
-      <div id="word"> {{ msg }} </div>
+      <div id="word"> {{ word }} </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { ref } from 'vue'
+import { ref, defineComponent  } from 'vue'
 
-export default {
+export default defineComponent({
   props: {
     word: String
   },
-  setup (props) {
+  setup () {
     const msg = ref('hey hey');
-    console.log(props);
     return {
       msg
     }
   }
-}
+})
 </script>
 
 <style scoped>
@@ -38,8 +37,22 @@ export default {
 #card-inner {
   width: 160px;
   height: 100px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
   border-radius: 8px;
   border: 2px solid #cbb296;
   color: black;
+}
+
+#word {
+  width: 80%;
+  height: 25px;
+  margin: 10px;
+  vertical-align: center;
+  line-height: 25px;
+  border-radius: 5px;
+  font-weight: bold;
+  background-color: white;
 }
 </style>
