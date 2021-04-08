@@ -1,6 +1,6 @@
 <!--suppress TypeScriptCheckImport -->
 <template>
-  <div id="card">
+  <div id="card" :style="{backgroundColor: color}">
     <div id="card-inner">
       <div id="word"> {{ word }} </div>
     </div>
@@ -8,16 +8,34 @@
 </template>
 
 <script lang="ts">
-import { ref, defineComponent  } from 'vue'
+import { defineComponent  } from 'vue'
 
 export default defineComponent({
   props: {
-    word: String
+    word: {
+      type: String,
+      required: true
+    },
+    team: {
+      type: String,
+      required: true
+    }
   },
-  setup () {
-    const msg = ref('hey hey');
+  setup (props) {
+    const teamColors : any = {
+      red: '#dc143c',
+      blue: '#4169e1',
+      neutral: '#f4d8b5',
+      assassin: '#000000'
+    }
     return {
-      msg
+      teamColors,
+      props
+    }
+  },
+  computed: {
+    color(): String {
+      return this.teamColors[this.props.team];
     }
   }
 })
@@ -31,7 +49,8 @@ export default defineComponent({
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #f4d8b5;
+  /*background-color: #f4d8b5;*/
+  transition: background-color 2s;
 }
 
 #card-inner {
@@ -42,7 +61,16 @@ export default defineComponent({
   justify-content: center;
   border-radius: 8px;
   border: 2px solid #cbb296;
+  background-color: #f4d8b5;
   color: black;
+}
+
+.blue {
+  background-color: #4169e1;
+}
+
+.red {
+  background-color: b;
 }
 
 #word {
@@ -54,5 +82,16 @@ export default defineComponent({
   border-radius: 5px;
   font-weight: bold;
   background-color: white;
+  transition: background-color 0.5s;
 }
+
+#word:hover {
+  cursor: pointer;
+  background-color: lemonchiffon;
+}
+
+#word::selection {
+  background: lightpink;
+}
+
 </style>
