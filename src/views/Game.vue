@@ -1,7 +1,7 @@
 <template>
     <div>
       <teleport to="body">
-        <Loading/>
+            <Loading />
       </teleport>
     </div>
 </template>

@@ -6,7 +6,8 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
     name: 'Home',
-    component: Home
+    component: Home,
+    meta: { transition: 'fade' }
   },
   {
     path: '/room/:id',

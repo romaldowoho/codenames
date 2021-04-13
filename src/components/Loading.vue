@@ -1,5 +1,5 @@
 <template>
-  <transition name="fade" appear>
+  <transition name="fade" mode="out-in" appear>
     <div id="wrapper" v-if="loading">
       <div id="card">
         <div id="inner-dark">
@@ -15,11 +15,15 @@
 <script lang="ts">
 import {ref, defineComponent} from 'vue'
 
+interface ColorTile {
+  value: string,
+  on: boolean
+}
 export default defineComponent({
   name: "Loading",
   setup() {
     const loading = ref(true)
-    const colors = ref([] as object[])
+    const colors = ref([] as Array<ColorTile>)
     // so that tiles fade-in in spiral order. I know, I know, this is not 'scalable', but so much faster
     const fadeInOrder = [0,1,2,3,4,9,14,19,24,23,22,21,20,15,10,5,6,7,8,13,18,17,16,11,12]
     colors.value.push(... new Array(9).fill(null).map(() => ({value: 'red', on: false})),
@@ -95,7 +99,7 @@ export default defineComponent({
     align-items: center;
     margin: 2px;
     border-radius: 3px;
-    transition: background-color 1s;
+    transition: background-color 0.8s;
   }
 
   .red {
@@ -104,8 +108,8 @@ export default defineComponent({
   }
 
   .red div {
-    height: 7px;
-    width: 7px;
+    height: 8px;
+    width: 8px;
     border-radius: 3px;
     border: 1px solid rgba(223, 226, 227, 0.81);
     box-shadow: 0px 0px 3px 1px rgba(223, 226, 227, 0.81);
@@ -154,9 +158,9 @@ export default defineComponent({
   }
 
   .fade-enter-active, .fade-leave-active {
-    transition: opacity .5s;
+    transition: opacity .5s ease-out;
   }
-  .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  .fade-enter, .fade-leave-to {
     opacity: 0;
   }
 </style>

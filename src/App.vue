@@ -1,6 +1,10 @@
 <template>
   <div id="app">
-    <router-view/>
+    <router-view v-slot="{ Component, route }">
+      <transition :name="route.meta.transition" mode="out-in">
+        <component :is="Component" />
+      </transition>
+    </router-view>
   </div>
 </template>
 
@@ -21,16 +25,14 @@ export default {
   color: #2c3e50;
 }
 
-#nav {
-  padding: 30px;
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease-in;
 }
 
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
 
-#nav a.router-link-exact-active {
-  color: #42b983;
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>
