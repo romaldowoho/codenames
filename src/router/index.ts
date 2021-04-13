@@ -1,11 +1,18 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 const Home = () => import('../views/Home.vue')
+const Game = () => import('../views/Game.vue')
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
     name: 'Home',
     component: Home
+  },
+  {
+    path: '/room/:id',
+    name: 'Game',
+    component: Game,
+    meta: { transition: 'fade' }
   }
 ]
 
