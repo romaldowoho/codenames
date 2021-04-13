@@ -1,5 +1,5 @@
 <template>
-  <transition name="fade">
+  <transition name="fade" appear>
     <div id="wrapper" v-if="loading">
       <div id="card">
         <div id="inner-dark">
@@ -20,6 +20,8 @@ export default defineComponent({
   setup() {
     const loading = ref(true)
     const colors = ref([] as object[])
+    // so that tiles fade-in in spiral order. I know, I know, this is not 'scalable', but so much faster
+    const fadeInOrder = [0,1,2,3,4,9,14,19,24,23,22,21,20,15,10,5,6,7,8,13,18,17,16,11,12]
     colors.value.push(... new Array(9).fill(null).map(() => ({value: 'red', on: false})),
                       ... new Array(8).fill(null).map(() => ({value: 'blue', on: false})),
                       ... new Array(7).fill(null).map(() => ({value: 'neutral', on: false})),
@@ -31,7 +33,7 @@ export default defineComponent({
         setTimeout(() => {loading.value = false}, 1000)
         return
       }
-      colors.value[index].on = true
+      colors.value[fadeInOrder[index]].on = true
       setTimeout(() => load(++index), Math.max(Math.round(Math.random() * 600), 200))
     }
 
@@ -126,6 +128,7 @@ export default defineComponent({
 
   .neutral {
     background-color: #f4d8b5;
+    box-shadow: 0px 0px 2px 1px rgba(236, 207, 207, 0.41);
   }
 
   .black {
