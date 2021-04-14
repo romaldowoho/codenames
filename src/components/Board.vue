@@ -6,29 +6,22 @@
 </template>
 
 <script lang="ts">
-import { defineComponent  } from 'vue'
+import {computed, defineComponent} from 'vue'
+import { useStore } from 'vuex'
 import  Card from './Card.vue'
-import axios from 'axios'
+// import axios from 'axios'
 
 export default defineComponent({
   components: {
     Card
   },
-  props: {
-    word: String
-  },
-  data() {
-    return {
-      cards: []
-    }
-  },
-  beforeCreate() {
-    axios.get('http://localhost:3000/newgame')
-         .then(res => {this.cards = res.data; console.log(res.data)})
-         .catch(err => {console.log(err)});
-  },
   setup () {
-
+    const store = useStore()
+    const cards = computed(() => store.state.game.cards)
+    return {
+      store,
+      cards
+    }
   },
   methods: {
 

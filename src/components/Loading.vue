@@ -1,15 +1,26 @@
 <template>
-  <transition name="fade" mode="out-in" appear>
-    <div id="wrapper" v-if="loading">
-      <div id="card">
-        <div id="inner-dark">
-          <div v-for="(card, index) in 25" :key="card" :class="[colors[index].on ? colors[index].value : '','color']">
-            <div></div>
+  <div>
+    <!--
+         When the loading animation fades in, the store is already set so the board is visible on the background,
+         and this #load-background div covers the board until the animation is done
+     -->
+    <teleport to="body">
+      <div id="load-background" v-if="loading"></div>
+    </teleport>
+
+    <transition name="fade" mode="out-in" appear>
+      <div id="wrapper" v-if="loading">
+        <div id="card">
+          <div id="inner-dark">
+            <div v-for="(card, index) in 25" :key="card" :class="[colors[index].on ? colors[index].value : '','color']">
+              <div></div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </transition>
+    </transition>
+  </div>
+
 </template>
 
 <script lang="ts">
@@ -64,11 +75,26 @@ export default defineComponent({
 
 <style scoped>
   #wrapper {
-    height: 100vh;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
     display: flex;
     justify-content: center;
     align-items: center;
     background-color: blanchedalmond;
+    z-index: 1;
+  }
+
+  #load-background {
+    position: absolute;
+    background-color: white;
+    z-index: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
   }
   #card {
     background-image: url("../assets/CodenamesCard.svg");
