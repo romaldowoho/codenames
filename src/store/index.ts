@@ -11,7 +11,8 @@ const state = {
         blue_team: [],
         red_team: [],
         game_log: []
-    }
+    },
+    nickname: null
 }
 
 export  default createStore({

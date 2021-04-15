@@ -51,17 +51,16 @@ export default defineComponent({
       }
       axios.post('http://localhost:3000/newgame', {nickname: this.nickname})
            .then(res => {
+             this.store.dispatch('setNickname', this.nickname);
              this.store.dispatch('setGameState', res.data)
-                 .then(() => {
-                   this.$router.push({
-                     name: 'Game',
-                     params: {
-                       id: this.store.state.game.id
-                     }
-                   })
-                 });
-
-
+                       .then(() => {
+                         this.$router.push({
+                           name: 'Game',
+                           params: {
+                             id: this.store.state.game.id
+                           }
+                         })
+                       });
            })
           .catch(err => {
             this.errorMsg = err.message;
@@ -89,7 +88,8 @@ export default defineComponent({
 <style scoped>
   .home {
     height: 100vh;
-    background: linear-gradient(palevioletred, cornflowerblue);
+    /*background: linear-gradient(palevioletred, cornflowerblue);*/
+    background: radial-gradient(rgba(255, 183, 0, 0.5) 10%, rgba(145, 2, 71, 0.63) 80%);
     display: flex;
     flex-direction: column;
     justify-content: center;

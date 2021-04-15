@@ -1,26 +1,25 @@
 <template>
-  <div>
-    <!--
-         When the loading animation fades in, the store is already set so the board is visible on the background,
-         and this #load-background div covers the board until the animation is done
-     -->
-    <teleport to="body">
+  <teleport to="body">
+    <div>
+      <!--
+           When the loading animation fades in, the store is already set so the board is visible on the background,
+           and this #load-background div covers the board until the animation is done
+       -->
       <div id="load-background" v-if="loading"></div>
-    </teleport>
 
-    <transition name="fade" mode="out-in" appear>
-      <div id="wrapper" v-if="loading">
-        <div id="card">
-          <div id="inner-dark">
-            <div v-for="(card, index) in 25" :key="card" :class="[colors[index].on ? colors[index].value : '','color']">
-              <div></div>
+      <transition name="fade" mode="out-in" appear>
+        <div id="wrapper" v-if="loading">
+          <div id="card">
+            <div id="inner-dark">
+              <div v-for="(card, index) in 25" :key="card" :class="[colors[index].on ? colors[index].value : '','color']">
+                <div></div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </transition>
-  </div>
-
+      </transition>
+    </div>
+  </teleport>
 </template>
 
 <script lang="ts">
@@ -83,7 +82,8 @@ export default defineComponent({
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: blanchedalmond;
+    /*background-color: blanchedalmond;*/
+    background: radial-gradient(rgba(255, 183, 0, 0.85) 10%, rgba(145, 2, 71, 0.8) 80%);
     z-index: 1;
   }
 

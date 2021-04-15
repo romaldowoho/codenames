@@ -34,9 +34,17 @@ export default defineComponent({
     height: 640px;
     width: 940px;
     margin: 0 auto;
+    padding-top: 50px;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
+  }
+  
+  @media (max-width: 480px) {
+    #board {
+      width: 360px;
+      height: 300px;
+    }
   }
 </style>

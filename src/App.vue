@@ -21,8 +21,10 @@ export default {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  height: 100vh;
   text-align: center;
   color: #2c3e50;
+  background: radial-gradient(rgba(255, 183, 0, 0.6) 10%, rgba(145, 2, 71, 0.63) 80%);
 }
 
 .fade-enter-active,

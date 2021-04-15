@@ -49,7 +49,6 @@ export default defineComponent({
   display: flex;
   justify-content: center;
   align-items: center;
-  /*background-color: #f4d8b5;*/
   transition: background-color 2s;
 }
 
@@ -94,4 +93,21 @@ export default defineComponent({
   background: lightpink;
 }
 
+@media (max-width: 480px) {
+  #card {
+    width: 70px;
+    height: 50px;
+  }
+
+  #card-inner {
+    width: 60px;
+    height: 40px;
+  }
+
+  #word {
+    height: 12px;
+    line-height: 12px;
+    font-size: 7px;
+  }
+}
 </style>
