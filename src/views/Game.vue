@@ -7,7 +7,7 @@
         </div>
         <div id="game-state">
           <div class="team-card red-team">
-            <button>Join as operative</button>
+            <button @click="joinGame('red_team', 'operative')">Join as operative</button>
             <button>Join as spymaster</button>
           </div>
           <div class="game-log"></div>
@@ -19,19 +19,32 @@
 <script lang="ts">
 import Loading  from "../components/Loading.vue";
 import Board from "../components/Board.vue";
-import {defineComponent} from "vue";
+import {defineComponent, inject} from "vue";
+import {useStore} from "vuex";
 
 export default defineComponent({
   name: "Game.vue",
   components: {
     Loading,
     Board
+  },
+  setup() {
+    const socket : any = inject('socket')
+    const store = useStore()
+    return {
+      socket,
+      store
+    }
+  },
+  methods: {
+    joinGame(team : string, role : string) {
+      this.socket.emit('join', team, role, this.store.state.nickname, this.store.state.game.id);
+    }
   }
 })
 </script>
 
 <style scoped>
-
   #game {
     /*padding: 0 10% 0 10%;*/
   }

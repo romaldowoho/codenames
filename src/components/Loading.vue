@@ -3,7 +3,7 @@
     <div>
       <!--
            When the loading animation fades in, the store is already set so the board is visible on the background,
-           and this #load-background div covers the board until the animation is done
+           so this #load-background div covers the board until the animation is done
        -->
       <div id="load-background" v-if="loading"></div>
 
@@ -89,7 +89,7 @@ export default defineComponent({
 
   #load-background {
     position: absolute;
-    background-color: white;
+    background-color: cornsilk;
     z-index: 0;
     top: 0;
     right: 0;

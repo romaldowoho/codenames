@@ -22,21 +22,22 @@
 </template>
 
 <script lang="ts">
-import { ref, defineComponent  } from 'vue'
+import {ref, defineComponent, inject} from 'vue'
 import { useStore } from 'vuex'
 import  axios from 'axios'
-// import  io from 'socket.io-client'
 
 export default defineComponent({
   name: 'Home',
   setup() {
     const store = useStore()
+    const socket : any = inject('socket')
     const nickname = ref('')
     const state = ref('home')
     const room = ref('')
     const errorMsg = ref('')
     return {
       store,
+      socket,
       nickname,
       state,
       room,
@@ -51,20 +52,11 @@ export default defineComponent({
       }
       axios.post('http://localhost:3000/newgame', {nickname: this.nickname})
            .then(res => {
-             this.store.dispatch('setNickname', this.nickname);
-             this.store.dispatch('setGameState', res.data)
-                       .then(() => {
-                         this.$router.push({
-                           name: 'Game',
-                           params: {
-                             id: this.store.state.game.id
-                           }
-                         })
-                       });
+             this.setStoreAndRedirect(res)
            })
           .catch(err => {
             this.errorMsg = err.message;
-          });
+          })
     },
     joinRoom() {
       // room name format has to be color_adjective_animal
@@ -73,7 +65,28 @@ export default defineComponent({
       }
       else if (!this.nickname) {
         this.errorMsg = 'Nickname cannot be empty'
+      } else {
+        axios.post('http://localhost:3000/joingame', {nickname: this.nickname, gameID: this.room})
+            .then(res => {
+              this.setStoreAndRedirect(res)
+            })
+            .catch(err => {
+              this.errorMsg = err.message
+            })
       }
+    },
+    setStoreAndRedirect(res : any) {
+      console.log(res.data)
+      this.store.dispatch('setNickname', this.nickname)
+      this.store.dispatch('setGameState', res.data)
+          .then(() => {
+            this.$router.push({
+              name: 'Game',
+              params: {
+                id: this.store.state.game.id
+              }
+            })
+          })
     },
     back() {
       this.state = 'home'
