@@ -9,6 +9,9 @@
           <div class="team-card red-team">
             <button @click="joinGame('red_team', 'operative')">Join as operative</button>
             <button>Join as spymaster</button>
+            <div v-for="player in red_team" :key="player.nickname">
+              {{ player.nickname}}
+            </div>
           </div>
           <div class="game-log"></div>
           <div class="team-card blue-team"></div>
@@ -19,7 +22,7 @@
 <script lang="ts">
 import Loading  from "../components/Loading.vue";
 import Board from "../components/Board.vue";
-import {defineComponent, inject} from "vue";
+import {computed, defineComponent, inject, onBeforeUnmount} from "vue";
 import {useStore} from "vuex";
 
 export default defineComponent({
@@ -29,16 +32,31 @@ export default defineComponent({
     Board
   },
   setup() {
-    const socket : any = inject('socket')
     const store = useStore()
+    const socket : any = inject('socket')
+    socket.on('playerJoin', (player : object) => {
+      console.log(player)
+      store.dispatch('addPlayer', player);
+    })
+    onBeforeUnmount(() => {
+      socket.offAny('playerJoin')
+    })
     return {
       socket,
-      store
+      store,
+      red_team: computed(() => store.state.game.red_team),
+      blue_team: computed(() => store.state.game.blue_team)
     }
   },
   methods: {
     joinGame(team : string, role : string) {
-      this.socket.emit('join', team, role, this.store.state.nickname, this.store.state.game.id);
+      const player = {
+        nickname: this.store.state.nickname,
+        team,
+        role
+      }
+      this.socket.emit('joinTeam', this.store.state.game.id, player);
+
     }
   }
 })

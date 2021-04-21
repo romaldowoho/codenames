@@ -6,14 +6,14 @@
     </div>
     <div v-else-if="state === 'create'" class="flex-col">
       <input type="text" placeholder="Nickname" v-model="nickname">
-      <button class="btn" @click="createRoom()">Create</button>
-      <button class="btn" @click="back()">Back</button>
+      <button class="btn" @click="createRoom">Create</button>
+      <button class="btn" @click="back">Back</button>
     </div>
     <div v-else-if="state === 'join'" class="flex-col">
       <input type="text" placeholder="Room ID" v-model="room">
       <input type="text" placeholder="Nickname" v-model="nickname">
-      <button class="btn" @click="joinRoom()">Join</button>
-      <button class="btn" @click="back()">Back</button>
+      <button class="btn" @click="joinRoom">Join</button>
+      <button class="btn" @click="back">Back</button>
     </div>
     <div>
       <small v-if="errorMsg">* {{errorMsg}}</small>
@@ -22,9 +22,9 @@
 </template>
 
 <script lang="ts">
-import {ref, defineComponent, inject} from 'vue'
+import {ref, defineComponent, inject, onBeforeUnmount} from 'vue'
 import { useStore } from 'vuex'
-import  axios from 'axios'
+// import  axios from 'axios'
 
 export default defineComponent({
   name: 'Home',
@@ -35,6 +35,11 @@ export default defineComponent({
     const state = ref('home')
     const room = ref('')
     const errorMsg = ref('')
+
+    onBeforeUnmount(() => {
+      socket.offAny('newGameState')
+      socket.offAny('existingGameState')
+    })
     return {
       store,
       socket,
@@ -50,13 +55,11 @@ export default defineComponent({
         this.errorMsg = 'Nickname cannot be empty'
         return
       }
-      axios.post('http://localhost:3000/newgame', {nickname: this.nickname})
-           .then(res => {
-             this.setStoreAndRedirect(res)
-           })
-          .catch(err => {
-            this.errorMsg = err.message;
-          })
+      this.socket.emit('newGame')
+      this.socket.on('newGameState', (gameState : object) => {
+        console.log(gameState)
+        this.setStoreAndRedirect(gameState)
+      })
     },
     joinRoom() {
       // room name format has to be color_adjective_animal
@@ -66,19 +69,16 @@ export default defineComponent({
       else if (!this.nickname) {
         this.errorMsg = 'Nickname cannot be empty'
       } else {
-        axios.post('http://localhost:3000/joingame', {nickname: this.nickname, gameID: this.room})
-            .then(res => {
-              this.setStoreAndRedirect(res)
-            })
-            .catch(err => {
-              this.errorMsg = err.message
-            })
+        this.socket.emit('joinGame', this.room)
+        this.socket.on('existingGameState', (gameState : object) => {
+          console.log(gameState)
+          this.setStoreAndRedirect(gameState)
+        })
       }
     },
-    setStoreAndRedirect(res : any) {
-      console.log(res.data)
+    setStoreAndRedirect(data : any) {
       this.store.dispatch('setNickname', this.nickname)
-      this.store.dispatch('setGameState', res.data)
+      this.store.dispatch('setGameState', data)
           .then(() => {
             this.$router.push({
               name: 'Game',
