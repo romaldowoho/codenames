@@ -5,13 +5,13 @@
         <button class="btn" @click="state = 'join'">Join Room</button>
     </div>
     <div v-else-if="state === 'create'" class="flex-col">
-      <input type="text" placeholder="Nickname" v-model="nickname">
+      <input type="text" placeholder="Nickname" v-model.trim="nickname">
       <button class="btn" @click="createRoom">Create</button>
       <button class="btn" @click="back">Back</button>
     </div>
     <div v-else-if="state === 'join'" class="flex-col">
-      <input type="text" placeholder="Room ID" v-model="room">
-      <input type="text" placeholder="Nickname" v-model="nickname">
+      <input type="text" placeholder="Room ID" v-model.trim="room">
+      <input type="text" placeholder="Nickname" v-model.trim="nickname">
       <button class="btn" @click="joinRoom">Join</button>
       <button class="btn" @click="back">Back</button>
     </div>
@@ -36,6 +36,7 @@ export default defineComponent({
     const room = ref('')
     const errorMsg = ref('')
 
+
     onBeforeUnmount(() => {
       socket.offAny('newGameState')
       socket.offAny('existingGameState')
@@ -55,7 +56,7 @@ export default defineComponent({
         this.errorMsg = 'Nickname cannot be empty'
         return
       }
-      this.socket.emit('newGame')
+      this.socket.emit('newGame', this.nickname)
       this.socket.on('newGameState', (gameState : object) => {
         console.log(gameState)
         this.setStoreAndRedirect(gameState)
@@ -69,7 +70,7 @@ export default defineComponent({
       else if (!this.nickname) {
         this.errorMsg = 'Nickname cannot be empty'
       } else {
-        this.socket.emit('joinGame', this.room)
+        this.socket.emit('joinRoom', this.room)
         this.socket.on('existingGameState', (gameState : object) => {
           console.log(gameState)
           this.setStoreAndRedirect(gameState)
@@ -77,6 +78,7 @@ export default defineComponent({
       }
     },
     setStoreAndRedirect(data : any) {
+      this.store.dispatch('addPlayers', data.players);
       this.store.dispatch('setNickname', this.nickname)
       this.store.dispatch('setGameState', data)
           .then(() => {

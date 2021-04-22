@@ -6,7 +6,11 @@ export const setNickname = ({ commit } : any, nickname: string) => {
     commit('setNickname', nickname);
 }
 
-export const addPlayer = ({ commit } : any, player : any) => {
-    commit('addPlayer', player);
+export const addPlayers = ({ commit } : any, players : any) => {
+    commit('addPlayers', players);
+}
+
+export  const removePlayer = ({ commit } : any, player : any) => {
+    commit('removePlayer', player);
 }
 

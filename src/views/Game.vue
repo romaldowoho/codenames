@@ -1,13 +1,13 @@
 <template>
     <div id="game">
-        <Loading />
+<!--        <Loading />-->
         <Board/>
         <div id="controls">
           <h1>Game controls</h1>
         </div>
         <div id="game-state">
           <div class="team-card red-team">
-            <button @click="joinGame('red_team', 'operative')">Join as operative</button>
+            <button @click="joinTeam('red_team', 'operative')">Join as operative</button>
             <button>Join as spymaster</button>
             <div v-for="player in red_team" :key="player.nickname">
               {{ player.nickname}}
@@ -20,7 +20,7 @@
 </template>
 
 <script lang="ts">
-import Loading  from "../components/Loading.vue";
+// import Loading  from "../components/Loading.vue";
 import Board from "../components/Board.vue";
 import {computed, defineComponent, inject, onBeforeUnmount} from "vue";
 import {useStore} from "vuex";
@@ -28,7 +28,7 @@ import {useStore} from "vuex";
 export default defineComponent({
   name: "Game.vue",
   components: {
-    Loading,
+    // Loading,
     Board
   },
   setup() {
@@ -36,8 +36,13 @@ export default defineComponent({
     const socket : any = inject('socket')
     socket.on('playerJoin', (player : object) => {
       console.log(player)
-      store.dispatch('addPlayer', player);
+      store.dispatch('addPlayers', player);
     })
+
+    socket.on('playerLeave', (player: object) => {
+      store.dispatch('removePlayer', player);
+    })
+
     onBeforeUnmount(() => {
       socket.offAny('playerJoin')
     })
@@ -49,7 +54,7 @@ export default defineComponent({
     }
   },
   methods: {
-    joinGame(team : string, role : string) {
+    joinTeam(team : string, role : string) {
       const player = {
         nickname: this.store.state.nickname,
         team,
